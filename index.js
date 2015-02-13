@@ -61,7 +61,7 @@ var authonice = module.exports = function(req, res, next) {
 };
 
 // middleware for auth endpopints
-authonice.setup = function(User, options) {
+authonice.middleware = function(User, options) {
   options = options || {};
   
   options.verifyCallback = options.verifyCallback || function(user, code) {
