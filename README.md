@@ -38,6 +38,7 @@ var UserSchema = new mongoose.Schema({
     password: {type: String, required:true},
     verified: {type:Boolean, default:false}
 });
+UserSchema.plugin(require('mongoose-bcrypt'));
 var User = mongoose.model('User', UserSchema);
 
 // mount auth endpoints at /auth
@@ -89,10 +90,10 @@ app.get('*', function(req,res,next){
 
 If you mounted your endpoint at `/auth` (above) you will get these REST endpoints:
 
-- `POST /auth/login` - login with `email` & `password`, receive an auth token
+- `POST /auth/login` - login with vars `email` & `password`, receive an auth token
 - `POST /auth/register` - register a new user, send verification email
 - `GET /auth/verify/:code` - verify a user, based on an email they received
-- `GET /auth/resend` - resend verification email (requires `email` in POST vars)
+- `POST /auth/resend` - resend verification email (requires `email` in vars)
 - `GET /auth/user` (LOCKED) - send user object
 - `GET /auth/token` (LOCKED) - fast token-check, sends `OK`
 

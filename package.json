@@ -30,6 +30,9 @@
   },
   "homepage": "https://github.com/authonice/back-node",
   "dependencies": {
-    "express": "^4.11.2"
+    "body-parser": "^1.11.0",
+    "express": "^4.11.2",
+    "jwt-async": "^1.0.1",
+    "mongoose": "^3.8.23"
   }
 }
