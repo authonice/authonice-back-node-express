@@ -16,6 +16,8 @@ It's designed to work with lots of [backend languages](http://authonice.github.i
 
 If we don't have a module for the frontend-framework/backend-language/auth-service you want to support, [ask us](https://github.com/authonice/authonice.github.io/issues/new?title=Request:%20&labels=request) or [contribute](http://authonice.github.io/contribute)!
 
+You can see a demo of this in-use, [here](https://github.com/authonice/demo-node-mithril)
+
 ## installation
 
 ```
@@ -55,6 +57,24 @@ app.use(express.static('./public'));
 
 app.listen(3000);
 ```
+
+### options
+
+`authonice.middleware` has a second parameter that looks like this:
+
+```js
+{
+  // Your secret token key.
+  // default: pseudo-random
+  secret: 'kittykat0nkeybo04rD',
+
+  // Called when a user registers. Use it to email them.
+  // default: console.log, so you can manually verify
+  verifyCallback: function(user, code){}
+}
+```
+
+If you don't set `secret`, it will change on every server-reboot, so issued tokens will all be invalid.
 
 ### HTTPS
 
