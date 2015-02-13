@@ -1,0 +1,35 @@
+{
+  "name": "authnice",
+  "version": "0.0.0",
+  "description": "authnice backend for nodejs, mongoose & express",
+  "main": "index.js",
+  "scripts": {
+    "bump": "mversion patch -m && npm publish",
+    "test": "mocha",
+    "watch": "mocha -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/authonice/back-node.git"
+  },
+  "keywords": [
+    "authnice",
+    "authentication",
+    "mongoose",
+    "express"
+  ],
+  "author": "David Konsumer <konsumer@jetboystudio.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/authonice/back-node/issues"
+  },
+  "devDependencies": {
+    "chai": "^2.0.0",
+    "mocha": "^2.1.0",
+    "mversion": "^1.9.0"
+  },
+  "homepage": "https://github.com/authonice/back-node",
+  "dependencies": {
+    "express": "^4.11.2"
+  }
+}
