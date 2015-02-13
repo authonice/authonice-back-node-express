@@ -1,6 +1,6 @@
 {
   "name": "authonice",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "authnice backend for nodejs, mongoose & express",
   "main": "index.js",
   "scripts": {
