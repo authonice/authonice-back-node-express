@@ -1,18 +1,20 @@
+![authonice logo][logo]
+
 # authonice (nodejs)
 
 ## IN PROGRESS: not ready, yet
 
 This is the [authonice](http://authonice.github.io) backend for nodejs, mongoose & express.
 
-[![npm](https://nodei.co/npm/authonice-node.png)](https://www.npmjs.com/package/authonice-node)
-[![Build Status](https://travis-ci.org/authonice/authonice-back-node-express.svg?branch=master)](https://travis-ci.org/authonice/authonice-back-node-express)
-[![Code Climate](https://codeclimate.com/github/authonice/authonice-back-node-express/badges/gpa.svg)](https://codeclimate.com/github/authonice/authonice-back-node-express)
+[![npm](https://nodei.co/npm/authonice-node.png)](https://www.npmjs.com/package/authonice)
+[![Build Status](https://travis-ci.org/authonice/back-node.svg?branch=master)](https://travis-ci.org/authonice/back-node)
+[![Code Climate](https://codeclimate.com/github/authonice/back-node/badges/gpa.svg)](https://codeclimate.com/github/authonice/back-node)
 
 [authonice](http://authonice.github.io) is a platform/language/framework agnostic ecosystem for web-app authentication, with lots of inspiration from [satellizer](https://github.com/sahat/satellizer).
 
-It's designed to work with lots of backend languages, oauth services, & frontend frameworks. It's goal is to make you super-happy because your sites are safe, easy to setup & maintain, and stylishly locked-down in your language/frameworks of choice.
+It's designed to work with lots of [backend languages](http://authonice.github.io/backends), [auth services](http://authonice.github.io/services), & [frontend frameworks](http://authonice.github.io/frontends). It's goal is to make you super-happy because your sites are safe, easy to setup & maintain, and stylishly locked-down in your language/frameworks of choice.
 
-If we don't have a module for the frontend-framework/backend-language/auth-service  you want to support, [ask us](https://github.com/authonice/authonice.github.io/issues/new?title=Request:%20&labels=request) or [contribute](http://authonice.github.io/contribute)!
+If we don't have a module for the frontend-framework/backend-language/auth-service you want to support, [ask us](https://github.com/authonice/authonice.github.io/issues/new?title=Request:%20&labels=request) or [contribute](http://authonice.github.io/contribute)!
 
 ## installation
 
@@ -27,7 +29,7 @@ var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/quickstart');
-var authonice = require('authonice-node');
+var authonice = require('authonice');
 var Email = require('mongoose-type-email');
 
 // Your User model with the default fields
@@ -99,4 +101,7 @@ All the [frontends](http://authonice.github.io/frontends) should support these, 
 ### next steps
 
 - Go get a [frontend module](http://authonice.github.io/frontends) to give your app a face.
-- Add some [services](http://authonice.github.io/node/services) so you can accept logins authentication from social networks and things.
+- Add some [services](http://authonice.github.io/services) so you can accept logins authentication from social networks and things.
+
+
+[logo]: http://authonice.github.io/logo.png
