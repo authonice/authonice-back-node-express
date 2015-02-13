@@ -6,7 +6,7 @@
 
 This is the [authonice](http://authonice.github.io) backend for nodejs, mongoose & express.
 
-[![npm](https://nodei.co/npm/authonice-node.png)](https://www.npmjs.com/package/authonice)
+[![npm](https://nodei.co/npm/authonice.png)](https://www.npmjs.com/package/authonice)
 [![Build Status](https://travis-ci.org/authonice/back-node.svg?branch=master)](https://travis-ci.org/authonice/back-node)
 [![Code Climate](https://codeclimate.com/github/authonice/back-node/badges/gpa.svg)](https://codeclimate.com/github/authonice/back-node)
 
