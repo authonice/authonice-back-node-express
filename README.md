@@ -38,10 +38,10 @@ var Email = require('mongoose-type-email');
 var UserSchema = new mongoose.Schema({
     email: {type: Email, required:true, unique:true},
     password: {type: String, required:true},
-    verified: {type:Boolean, default:false}
+    verify: {type:String, default:null}
 });
 UserSchema.plugin(require('mongoose-bcrypt'));
-var User = mongoose.model('User', UserSchema);
+var User = module.exports = mongoose.model('User', UserSchema);
 
 // mount auth endpoints at /auth
 app.use('/auth', authonice.middleware(User));

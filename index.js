@@ -10,15 +10,6 @@ function generateCode(){
   return Math.random().toString(36).slice(-8);
 }
 
-var VerifySchema = new mongoose.Schema({
-  user: Object,
-  code: {
-    type: String,
-    default: generateCode
-  }
-});
-var Verify = mongoose.model('AuthoniceVerify', VerifySchema);
-
 // wrapper for simple errors
 function sendError(res, status) {
   status = status || 500;
@@ -64,8 +55,8 @@ var authonice = module.exports = function(req, res, next) {
 authonice.middleware = function(User, options) {
   options = options || {};
   
-  options.verifyCallback = options.verifyCallback || function(user, code) {
-    console.log('/verify/' + code);
+  options.verifyCallback = options.verifyCallback || function(user) {
+    console.log('/verify/' + user.verify);
   };
   
   var auth = express();
@@ -83,7 +74,7 @@ authonice.middleware = function(User, options) {
       email: req.body.email
     }).exec().then(function(user) {
       if (user) {
-        if (!user.verified) {
+        if (user.verify !== 'yes') {
           return sendError(res, 401)('User not verified.');
         }
         user.verifyPassword(req.body.password, function(err, isMatch) {
@@ -100,9 +91,7 @@ authonice.middleware = function(User, options) {
             if (err) {
               return sendError(res)(err);
             }
-            return res.send({
-              token: token
-            });
+            return res.send('"' + token + '"');
           });
         });
       } else {
@@ -115,41 +104,34 @@ authonice.middleware = function(User, options) {
   auth.post('/register', [urlParse, jsonParse], function(req, res) {
     var user = new User({
       email: req.body.email,
-      password: req.body.password
+      password: req.body.password,
+      verify: generateCode()
     });
     user.save(function(err, u) {
       if (err) {
-        return sendError(res)('Database error saving user.');
+        if (err.code == 11000){
+          err.type == 'emailDupe';
+        }
+        return sendError(res)(err);
       }
-      var verify = new Verify({
-        user: user
-      });
-      verify.save();
-      options.verifyCallback(u, verify.code);
-      return res.send({
-        'message': 'OK'
-      });
+      options.verifyCallback(u);
+      return res.send('"OK"');
     });
   });
   
   // verify a user
   auth.post('/verify', [urlParse, jsonParse], function(req, res) {
-    Verify.findOne({
-      code: req.body.token
-    }).exec().then(function(verify) {
-      if (!verify) {
+    User.findOne({
+      verify: req.body.token
+    }).exec().then(function(user) {
+      if (!user) {
         return sendError(res)('Code not found.');
       }
-      User.findOneAndUpdate({
-        _id: verify.user
-      }, {
-        verified: true
-      }).exec().then(function() {
-        verify.remove();
-        return res.send({
-          'message': 'OK'
-        });
-      }, sendError(res));
+      user.verify = 'yes';
+      user.save(function(err, u, numberAffected){
+        if (err) return sendError(res, 500)("Couldn't save.");
+        return res.send('"OK"');
+      });
     }, sendError(res));
   });
   
@@ -159,15 +141,13 @@ authonice.middleware = function(User, options) {
   });
   
   // quick token check
-  auth.get('/user', authonice, function(req, res) {
-    res.send({
-      'message': 'OK'
-    });
+  auth.get('/token', authonice, function(req, res) {
+    res.send('"OK"');
   });
   
   // request a verify-reissue
   auth.post('/resend', [urlParse, jsonParse], function(req, res) {
-    sendError(res)('TODO');
+    sendError(res)('"TODO"');
   });
   
   return auth;
