@@ -5,25 +5,6 @@ var bodyParser = require('body-parser');
 var urlParse = bodyParser.urlencoded({ extended: true });
 var jsonParse = bodyParser.json();
 
-// create a random string
-function generateCode(){
-  return Math.random().toString(36).slice(-8);
-}
-
-// wrapper for simple errors
-function sendError(res, status) {
-  status = status || 500;
-  return function(err) {
-    if (typeof err === 'string') {
-      err = {
-        message: err
-      };
-    }
-    err.status = status;
-    return res.status(status).send(err);
-  };
-}
-
 var jwt;
 
 // require auth
@@ -39,11 +20,11 @@ var authonice = module.exports = function(req, res, next) {
     token = req.body.token;
   }
   if (!token) {
-    return sendError(res, 401)('Token not set.');
+    return authonice.sendError(res, 401)('Token not set.');
   }
   jwt.verify(token, function(err, data) {
     if (err) {
-      return sendError(res, 401)(err);
+      return authonice.sendError(res, 401)(err);
     }
     req.user = data.claims.user;
     delete req.user.password;
@@ -64,7 +45,7 @@ authonice.middleware = function(User, options) {
   jwt = new JWT({
     crypto: {
       algorithm: 'HS512',
-      secret: options.secret || generateCode() + generateCode() + generateCode()
+      secret: options.secret || authonice.generateCode() + authonice.generateCode() + authonice.generateCode()
     }
   });
   
@@ -75,29 +56,29 @@ authonice.middleware = function(User, options) {
     }).exec().then(function(user) {
       if (user) {
         if (user.verify !== 'yes') {
-          return sendError(res, 401)('User not verified.');
+          return authonice.sendError(res, 401)('User not verified.');
         }
         user.verifyPassword(req.body.password, function(err, isMatch) {
           if (err) {
-            return sendError(res)('Database error looking up user.');
+            return authonice.sendError(res)('Database error looking up user.');
           }
           if (!isMatch) {
-            return sendError(res, 401)('Bad password.');
+            return authonice.sendError(res, 401)('Bad password.');
           }
           delete user.password;
           jwt.sign({
             user: user
           }, function(err, token) {
             if (err) {
-              return sendError(res)(err);
+              return authonice.sendError(res)(err);
             }
             return res.send('"' + token + '"');
           });
         });
       } else {
-        return sendError(res, 401)('User not found.');
+        return authonice.sendError(res, 401)('User not found.');
       }
-    }, sendError(res));
+    }, authonice.sendError(res));
   });
   
   // register new login credentials
@@ -105,14 +86,14 @@ authonice.middleware = function(User, options) {
     var user = new User({
       email: req.body.email,
       password: req.body.password,
-      verify: generateCode()
+      verify: authonice.generateCode()
     });
     user.save(function(err, u) {
       if (err) {
         if (err.code == 11000){
           err.type == 'emailDupe';
         }
-        return sendError(res)(err);
+        return authonice.sendError(res)(err);
       }
       options.verifyCallback(u);
       return res.send('"OK"');
@@ -125,14 +106,14 @@ authonice.middleware = function(User, options) {
       verify: req.body.token
     }).exec().then(function(user) {
       if (!user) {
-        return sendError(res)('Code not found.');
+        return authonice.sendError(res)('Code not found.');
       }
       user.verify = 'yes';
       user.save(function(err, u, numberAffected){
-        if (err) return sendError(res, 500)("Couldn't save.");
+        if (err) return authonice.sendError(res, 500)("Couldn't save.");
         return res.send('"OK"');
       });
-    }, sendError(res));
+    }, authonice.sendError(res));
   });
   
   // get user info
@@ -147,8 +128,27 @@ authonice.middleware = function(User, options) {
   
   // request a verify-reissue
   auth.post('/resend', [urlParse, jsonParse], function(req, res) {
-    sendError(res)('"TODO"');
+    authonice.sendError(res)('"TODO"');
   });
   
   return auth;
+};
+
+// wrapper for simple errors
+authonice.sendError = function(res, status) {
+  status = status || 500;
+  return function(err) {
+    if (typeof err === 'string') {
+      err = {
+        message: err
+      };
+    }
+    err.status = status;
+    return res.status(status).send(err);
+  };
+};
+
+// create a random string
+authonice.generateCode = function(){
+  return Math.random().toString(36).slice(-8);
 };
